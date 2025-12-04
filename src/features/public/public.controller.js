@@ -4,6 +4,7 @@ const contactUs = (req,res) => {
   const firstName = req.body.first_name;
   const lastName = req.body.last_name;
   const message = req.body.message;
+  //need to add more req.body fields
 
   const responseMessage = `Message received from ${firstName} ${lastName}`;
 
@@ -16,6 +17,7 @@ const calculateResidentialQuote = (req,res) => {
   const apts = +req.query.apts;
   const floors = +req.query.floors;
   const tier = req.query.tier.toLowerCase();
+    // Define valid tiers
 
   // validate request object
   if(!Object.keys(Data.unitPrices).includes(tier)){
