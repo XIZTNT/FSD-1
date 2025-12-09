@@ -818,53 +818,55 @@
 
 									<div class="row">
 											<div class="col-md-4">
-												<label for="name">Full Name *</label>
-												<input id="name" required type="text" value="" class="form-control" name="contact[name][required]">
+												<!-- Changed "name" to "fullname" for ids for JSON compatability -->
+												<label for="fullname">Full Name *</label>
+												<input id="fullname" required type="text" class="form-control" name="fullname" value="">
 											</div>
 											<div class="col-md-4">
 												<label for="email">E-mail Address *</label>
-												<input id="email" required type="email" value="" class="form-control" name="contact[email][required]">
+												<input id="email" required type="email"  class="form-control" name="email" value="">
 											</div>
 											<div class="col-md-4">
 												<label for="phone">Phone</label>
-												<input id="phone" type="text" value="" class="form-control" name="contact[phone]">
+												<input id="phone" type="text" class="form-control" name="phone" value="">
 											</div>
 									</div>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label for="company_name">Company Name *</label>
-                                            <input id="name" required type="text" value="" class="form-control" name="contact[name][required]">
+											<!-- changed from 'name' to 'company_name' -->
+                                            <input id="company_name" required type="text"  class="form-control" name="company_name" value="">
                                         </div>
                                         <div class="col-md-6">
                                             <label for="project_name">Project Name *</label>
-                                            <input id="project_name" required type="text" value="" class="form-control" name="contact[name][required]">
+                                            <input id="project_name" required type="text"  class="form-control" name="project_name" value="">
                                         </div>
                                     </div>
 									<div class="row">
 											<div class="col-md-6">
                                                 <label for="project_description">Project Description *</label>
-												<input id="project_description" required type="text" value="" class="form-control" name="contact[subject][required]">
+												<input id="project_description" required type="text"  class="form-control" name="project_description" value="">
 											</div>
 											<div class="col-md-6">
 												<label for="department">Department</label>
-												<select id="department" class="form-control pointer" name="contact[department]">
+												<select id="department" class="form-control pointer" name="department" value="">
 													<option value="">--- Select ---</option>
-													<option value="Marketing">Commercial</option>
-													<option value="Webdesign">Residential</option>
+													<option value="Commercial">Commercial</option>
+													<option value="Residential">Residential</option>
 												</select>
 											</div>
 									</div>
 									<div class="row">
 											<div class="col-md-12">
 												<label for="message">Message *</label>
-												<textarea id="message" required maxlength="10000" rows="8" class="form-control" name="contact[message]"></textarea>
+												<textarea id="message" required maxlength="10000" rows="8" class="form-control" name="message" value=""></textarea>
 											</div>
 									</div>
 									<div class="row">
 											<div class="col-md-12">
 												<label for="attachment">File Attachment</label>
 												<!-- custom file upload -->
-												<input id="attachment" class="custom-file-upload" type="file" name="contact[attachment]"  data-btn-text="Select a File" />
+												<input id="attachment" class="custom-file-upload" type="file" name="attachment"  data-btn-text="Select a File" />
 												<small class="text-muted block">
                                                     Max file size: 10Mb (zip/pdf/jpg/png)
                                                 </small>
@@ -875,7 +877,7 @@
 
 								<div class="row">
 									<div class="col-md-12">
-										<button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-check"></i> SEND MESSAGE</button>
+										<button type="submit" class="btn btn-primary btn-lg" ><i class="fa fa-check"></i> SEND MESSAGE</button>
 									</div>
 								</div>
 							</form>
@@ -883,14 +885,6 @@
 						</div>
 						<!-- /FORM -->
 
-
-						<!-- INFO -->
-						<div class="col-md-4 col-sm-4" style="padding-left: 5%">
-
-							<header class="text-center mb-60">
-								<h2>Visit Us</h2>
-								<hr />
-							</header>
 							
 							<img class="img-fluid" src="assets/images/rocketElevators/map.jpg"/>
 						
@@ -995,7 +989,7 @@
 									<span class="input-group-addon">
 										<i class="fa fa-envelope"></i>
 									</span>
-									<input type="email" id="email" name="email" class="form-control required" placeholder="Enter your Email">
+									<input type="email" id="email" name="email"  placeholder="Enter your Email">
 									<span class="input-group-btn">
 										<button class="btn btn-primary" type="submit">
 											Subscribe
@@ -1047,17 +1041,18 @@
 		<script src="assets/js/contact.js"></script>
 
 		<!-- OPEN MODALS SCRIPT -->
+		 <!-- MOVED TO CONTACT.JS -->
 		<script type="text/javascript">
-			$("#contact-form").on("submit", function(e){
-				e.preventDefault();
-				$("#success-message").modal("show");
-				this.reset();
-			});
-			$("#subscribe-form").on("submit", function(e){
-				e.preventDefault();
-				$("#subscribe-message").modal("show");
-				this.reset();
-			});
+			// $("#contact-form").on("submit", function(e){
+			// 	e.preventDefault();
+			// 	$("#success-message").modal("show");
+			// 	this.reset();
+			// });
+			// $("#subscribe-form").on("submit", function(e){
+			// 	e.preventDefault();
+			// 	$("#subscribe-message").modal("show");
+			// 	this.reset();
+			// });
 		</script>
 
 

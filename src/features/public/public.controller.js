@@ -8,30 +8,31 @@ var validator = require ('validator');
 //Contact Us Controller
 const contactUs = async (req,res) => {
 
-  const fullname = req.body.fullname; 
+  const { fullname, email, phone, company_name, project_name, project_description, department, message } = req.body;
 
   try {
 
     // Create a new document using the Contact schema
-    const newContact = new Contact ({
+    const newContact = new Contact({
       fullname,
-      email: req.body.email,
-      phone: req.body.phone,
-      company_name: req.body.company_name,
-      project_name: req.body.project_name,
-      department: req.body.department,
-      message: req.body.message
+      email,
+      phone,
+      company_name,
+      project_name,
+      project_description,
+      department,
+      message
     });
 
     // Save it to MongoDB
     await newContact.save();
 
-    // Send a simple confirmation
-    res.status(201).send({ message: `Message received from ${fullname}` });
+    // Send a simple confirmation, with JSON to communicate with HTML script
+    res.status(201).json({ message: `Message received from ${fullname}` });
 
   } catch (err) {
     console.error(err);
-    res.status(500).send({ error: "Failed to submit contact form" });
+    res.status(500).json({ error: "Failed to submit contact form" });
   }
 };
 //watch video, FOR DEMO FOR ROAD MAP, AND PREDETERMINED, AND ADD THINGS FOR HEALTH

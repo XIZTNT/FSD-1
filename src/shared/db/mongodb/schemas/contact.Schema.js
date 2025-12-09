@@ -39,6 +39,11 @@ project_name: {
     trim:true,
     required:true,
 },
+project_description: {
+    type:String,
+    trim:true,
+    required:true,
+},
 department: {
     type:String,
     trim:true,
