@@ -4,6 +4,9 @@ const Data = require('../../shared/resources/data');
 const Contact = require ('../../shared/db/mongodb/schemas/contact.Schema')
 const Quote = require ('../../shared/db/mongodb/schemas/quote.Schema')
 
+//I need to use with building types for request quote portion
+const validator = require('validator');
+
 //Contact Us Controller
 const contactUs = async (req,res) => {
 
