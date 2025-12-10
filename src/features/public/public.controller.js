@@ -1,3 +1,4 @@
+//I believe will be necessary for agent table creation
 const Data = require('../../shared/resources/data');
 //Contact Us Schema Import
 const Contact = require ('../../shared/db/mongodb/schemas/contact.Schema')
@@ -34,55 +35,77 @@ const contactUs = async (req,res) => {
   }
 };
 
-//NEW QUOTE CONTROLLER
-const calculateQuote = (req, res) => {
-  const {
-    building_type,
-    numFloors,
-    numBasements,
-    numApts,
-    maxOccupancy,
-    numElevators,
-    tier // <-- renamed here
-  } = req.query;
+// NEW QUOTE CONTROLLER
+const calculateQuote = (req, res) => {  
+  let { building_type, numFloors, numApts, maxOccupancy, tier, regular_elevators, freight_elevators } = req.query;
+
+  // Convert numeric strings to numbers
+  numFloors = Number(numFloors) || 0;
+  numApts = Number(numApts) || 0;
+  maxOccupancy = Number(maxOccupancy) || 0;
+  regular_elevators = Number(regular_elevators) || 0;
+  freight_elevators = Number(freight_elevators) || 0;
 
   let elevatorCount = 0;
+
+  // Residential calculation
   if (building_type === "residential") {
-    elevatorCount = Math.ceil(numApts / numFloors / 6);
-  } else if (building_type === "commercial") {
-    elevatorCount = Math.ceil(maxOccupancy / 1000);
-  } else if (building_type === "industrial") {
-    elevatorCount = parseInt(numElevators);
+    elevatorCount = Math.max(1, Math.ceil(numApts / numFloors / 6) * Math.ceil(numFloors / 20));
+  } 
+  
+  // Commercial calculation
+  else if (building_type === "commercial") {
+    const regular = Math.ceil((maxOccupancy * numFloors) / 200) * Math.ceil(numFloors / 10);
+    const freight = Math.ceil(numFloors / 10);
+
+    // Use specified quantities for each elevator type if provided
+    elevatorCount = regular_elevators + freight_elevators;
+    
+    // If quantities are not specified, fallback to calculated values
+    if (regular_elevators === 0) {
+      elevatorCount += regular;
+    }
+    if (freight_elevators === 0) {
+      elevatorCount += freight;
+    }
+  } 
+  
+  // Industrial calculation
+  else if (building_type === "industrial") {
+    elevatorCount = regular_elevators + freight_elevators;
   }
 
+  // Pricing based on tier
   let unitPrice = 0;
   let installRate = 0;
 
-  switch (tier) { // <-- using tier instead of productLine
-    case "standard":
-      unitPrice = 7565;
-      installRate = 0.10;
-      break;
+  switch (tier) {
     case "premium":
-      unitPrice = 12345;
-      installRate = 0.13;
+      unitPrice = 12000;
+      installRate = 0.15;
       break;
     case "excelium":
-      unitPrice = 15400;
-      installRate = 0.16;
+      unitPrice = 15000;
+      installRate = 0.2;
       break;
-    default:
-      unitPrice = 7565;
-      installRate = 0.10;
+    default: // "standard"
+      unitPrice = 8000;
+      installRate = 0.1;
   }
 
   const elevatorCost = elevatorCount * unitPrice;
   const installationFee = elevatorCost * installRate;
   const totalCost = elevatorCost + installationFee;
 
-  res.json({ elevatorCount, unitPrice, elevatorCost, installationFee, totalCost });
+  // Return JSON with results
+  res.json({
+    elevatorCount,
+    unitPrice,
+    elevatorCost,
+    installationFee,
+    totalCost
+  });
 };
-
 
 
 
