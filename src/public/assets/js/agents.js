@@ -1,10 +1,4 @@
-//would likely need to  import within html so this
-// so this front end document can interact properly
-//like importing resident.html 
-
-// Store current sort parameters
-let currentSortBy = "name";
-let currentSortDirection = "asc";  // Default to ascending order
+// agents.js - Full setup for fetching agent data and rendering it in the HTML table
 
 // Get the filter elements from the DOM
 const filterFirstName = document.getElementById("filter-first-name");
@@ -12,11 +6,17 @@ const filterLastName = document.getElementById("filter-last-name");
 const filterFee = document.getElementById("filter-fee");
 const filterRating = document.getElementById("filter-rating");
 const filterRegion = document.getElementById("filter-region");
-const loader = document.querySelector("#loader");
+const loader = document.querySelector("#preloader");  // Assuming you want to show a loader
 
-// Function to fetch and render agents with filters and sorting
+// Store current sort parameters
+let currentSortBy = "name";
+let currentSortDirection = "asc";  // Default to ascending order
+
+// Function to fetch agent data
 async function fetchAgents() {
-    loader.style.display = "block";  // Show loading spinner
+    if (loader) {
+        loader.style.display = "block";  // Show loading spinner
+    }
 
     // Collect the filter values from the dropdowns
     const firstName = filterFirstName.value;
@@ -37,21 +37,41 @@ async function fetchAgents() {
     }).toString();
 
     try {
-        const response = await fetch(`/agents?${queryString}`);
+        // API CALL WILL FETCH AGENTS AND DISPLAY ON RESIDENTIAL HTML PAGE T
+        const response = await fetch(`http://localhost:3004/agents-by-region?${queryString}`);
         const data = await response.json();
 
-        if (data.agents) {
+        if (data.agents && data.agents.length > 0) {
             renderAgentTable(data.agents);  // Render the table with fetched data
         } else {
-            // Handle empty data or show an error
-            alert("No agents found matching your criteria.");
+            console.log("No agents found.");
         }
     } catch (error) {
         console.error("Error fetching agents:", error);
         alert("There was an issue fetching agent data.");
     } finally {
-        loader.style.display = "none";  // Hide loading spinner
+        if (loader) {
+            loader.style.display = "none";  // Hide loading spinner
+        }
     }
+}
+
+// Render the agent data in the table
+function renderAgentTable(agents) {
+    const tableBody = document.querySelector("#agents-table tbody");
+    tableBody.innerHTML = "";  // Clear existing table rows
+
+    // Loop through each agent and create a new table row
+    agents.forEach(agent => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${agent.first_name} ${agent.last_name}</td>
+            <td style="color: ${agent.ratingColor || 'black'}">${agent.rating}</td>
+            <td>$${agent.fee.toFixed(2)}</td>
+            <td>${agent.region}</td>
+        `;
+        tableBody.appendChild(row);
+    });
 }
 
 // Event listeners for the filter dropdowns to fetch data when changed
@@ -82,25 +102,5 @@ document.getElementById("sort-fee").addEventListener("click", () => handleSort("
 document.getElementById("sort-rating").addEventListener("click", () => handleSort("rating"));
 document.getElementById("sort-region").addEventListener("click", () => handleSort("region"));
 
-// Render the agent data in the table
-function renderAgentTable(agents) {
-    const tableBody = document.querySelector("#agents-table tbody");
-    tableBody.innerHTML = "";  // Clear existing table rows
-
-    agents.forEach(agent => {
-        const row = document.createElement("tr");
-
-        // Format each agent's data into table cells
-        row.innerHTML = `
-            <td>${agent.first_name} ${agent.last_name}</td>
-            <td style="color: ${agent.ratingColor}">${agent.rating}</td>
-            <td>$${agent.fee.toFixed(2)}</td>
-            <td>${agent.region}</td>
-        `;
-
-        tableBody.appendChild(row);
-    });
-}
-
 // Initialize fetching of agent data when the page loads
-fetchAgents();
+document.addEventListener("DOMContentLoaded", fetchAgents);
