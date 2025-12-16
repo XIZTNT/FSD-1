@@ -1,4 +1,6 @@
-// agents.js - Full setup for fetching agent data and rendering it in the HTML table
+
+//I NEED TO ADD OTHER OPTIONS FOR SORTING INSTEAD OF SAYING "ALL" AND ALSO FIXING SORTING
+
 
 // Get the filter elements from the DOM
 const filterFirstName = document.getElementById("filter-first-name");
@@ -6,7 +8,7 @@ const filterLastName = document.getElementById("filter-last-name");
 const filterFee = document.getElementById("filter-fee");
 const filterRating = document.getElementById("filter-rating");
 const filterRegion = document.getElementById("filter-region");
-const loader = document.querySelector("#preloader");  // Assuming you want to show a loader
+const loader = document.querySelector("#preloader");  //Loader
 
 // Store current sort parameters
 let currentSortBy = "name";
@@ -37,7 +39,7 @@ async function fetchAgents() {
     }).toString();
 
     try {
-        // API CALL WILL FETCH AGENTS AND DISPLAY ON RESIDENTIAL HTML PAGE T
+        // API CALL WILL FETCH AGENTS AND DISPLAY ON RESIDENTIAL HTML PAGE
         const response = await fetch(`http://localhost:3004/agents-by-region?${queryString}`);
         const data = await response.json();
 
@@ -47,6 +49,7 @@ async function fetchAgents() {
             console.log("No agents found.");
         }
     } catch (error) {
+        //WINDOW ALERT - WILL PROMPT AN ERROR IF SERVER IS NOT RUNNING
         console.error("Error fetching agents:", error);
         alert("There was an issue fetching agent data.");
     } finally {
@@ -59,20 +62,33 @@ async function fetchAgents() {
 // Render the agent data in the table
 function renderAgentTable(agents) {
     const tableBody = document.querySelector("#agents-table tbody");
-    tableBody.innerHTML = "";  // Clear existing table rows
+    tableBody.innerHTML = "";
 
-    // Loop through each agent and create a new table row
+    // Helper function for color based on rating
+    function getRatingColor(rating) {
+        if (rating === 100) return "#137f13"; // green
+        if (rating >= 90) return "#3a8de1";   // blue
+        return "#8e3ae1";                     // purple
+    }    
+
     agents.forEach(agent => {
         const row = document.createElement("tr");
+
+        // Set the background color of the entire row
+        row.style.backgroundColor = getRatingColor(agent.rating);
+        row.style.color = "white"; // Optional: improves readability
+
         row.innerHTML = `
-            <td>${agent.first_name} ${agent.last_name}</td>
-            <td style="color: ${agent.ratingColor || 'black'}">${agent.rating}</td>
+            <td>${agent.first_name}</td>
+            <td>${agent.last_name}</td>
             <td>$${agent.fee.toFixed(2)}</td>
+            <td>${agent.rating}</td>
             <td>${agent.region}</td>
         `;
         tableBody.appendChild(row);
     });
 }
+
 
 // Event listeners for the filter dropdowns to fetch data when changed
 filterFirstName.addEventListener("change", fetchAgents);
