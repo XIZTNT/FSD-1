@@ -44,5 +44,6 @@ const AgentSchema = new mongoose.Schema({
 
 
 
-
-module.exports = mongoose.model('Agent', AgentSchema)
+//added 'agentsWk6' so that although the model is connected to my cluster,
+//the cluster is specifically connected to the wk6 agent collection
+module.exports = mongoose.model('Agent', AgentSchema,'agentsWk6');

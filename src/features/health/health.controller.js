@@ -7,15 +7,16 @@ const helloWorld = async(req, res) => {
   // res.send('Hello World!!');
 };
 
+//Updated Status for Testing
 const status = async(req,res) => {
-  const envName = process.env.ENV_NAME;
-  const message = `Environment '${envName}' running on port: ${port}`;
-  res.send(message);
+  ResponseUtil.respondOk(res, null, 'Status OK');
 };
 
+//Updated Error for Testing
 const error = async(req,res) => {
-  res.status(400);
-  res.send('error');
+  const errorMessage = 'Test Error Message';
+  ResponseUtil.respondError(res, null, errorMessage);
 };
+
 
 module.exports = {helloWorld, status, error};

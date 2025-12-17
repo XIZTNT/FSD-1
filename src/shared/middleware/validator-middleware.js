@@ -40,3 +40,47 @@ export const contactValidator = (req, res, next) => {
   next(); // ✅ validation passed
 };
 
+export const quoteValidator = (req, res, next) => {
+    const { buildingType, numberOfApartments, numberOfFloors, maximumOccupancy, numberOfElevators } = req.body;
+
+    const fieldsByType = {
+        residential: ["numberOfApartments", "numberOfFloors"],
+        commercial: ["numberOfFloors", "maximumOccupancy"],
+        industrial: ["numberOfElevators"]
+    };
+
+    const requiredFields = fieldsByType[buildingType] || [];
+
+    for (let field of requiredFields) {
+        if (!req.body[field] || validator.isEmpty(req.body[field].toString())) {
+            return res.status(400).json({ error: `${field} is required for ${buildingType}` });
+        }
+        // Check numbers are valid integers
+        if (!validator.isInt(req.body[field].toString(), { min: 0 })) {
+            return res.status(400).json({ error: `${field} must be a positive integer` });
+        }
+    }
+
+    next();
+};
+
+
+// AGENT TABLE QUERY VALIDATION
+export const agentRegionValidator = (req, res, next) => {
+    const { region } = req.query;  // Assuming region is passed as a query parameter
+  
+    // Required region check
+    if (validator.isEmpty(region || "")) {
+      return res.status(400).json({ error: "Region is required" });
+    }
+  
+    // List of predefined valid regions (you could also fetch this dynamically from the database if needed)
+    const allowedRegions = ["North", "South", "East", "West"];
+    
+    // Check if the region passed is in the predefined list
+    if (!allowedRegions.includes(region)) {
+      return res.status(400).json({ error: "Invalid region provided" });
+    }
+  
+    next(); // Proceed with the query if region is valid
+  };

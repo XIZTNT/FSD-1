@@ -1,3 +1,4 @@
+//DIRECTLY INTERACTING WITH HTML INSTEAD OF HAVING "SCRIPT" TAGS WITHIN INDEX.HTML
 // <!-- BUTTON SUBMISSION EVENT LISTENER -->
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("contact-form");
@@ -22,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     console.log("📦 jsonBody:", jsonBody);
-
+//Have the fetch point to the local ENV port instead of the local liveserver at 5500. 
     try {
       const response = await fetch("http://localhost:3004/contact-us", {
         method: "POST",
