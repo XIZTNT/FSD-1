@@ -40,32 +40,33 @@ export const contactValidator = (req, res, next) => {
   next(); // ✅ validation passed
 };
 
+//QUOTE CALCULATION QUERY VALIDATION
 export const quoteValidator = (req, res, next) => {
-    const { buildingType, numberOfApartments, numberOfFloors, maximumOccupancy, numberOfElevators } = req.body;
+  const { building_type, numApts, numFloors, maxOccupancy, regular_elevators, freight_elevators } = req.query;
 
-    const fieldsByType = {
-        residential: ["numberOfApartments", "numberOfFloors"],
-        commercial: ["numberOfFloors", "maximumOccupancy"],
-        industrial: ["numberOfElevators"]
-    };
+  const fieldsByType = {
+      residential: ["numApts", "numFloors"],
+      commercial: ["numFloors", "maxOccupancy"],
+      industrial: ["regular_elevators", "freight_elevators"]
+  };
 
-    const requiredFields = fieldsByType[buildingType] || [];
+  const requiredFields = fieldsByType[building_type] || [];
 
-    for (let field of requiredFields) {
-        if (!req.body[field] || validator.isEmpty(req.body[field].toString())) {
-            return res.status(400).json({ error: `${field} is required for ${buildingType}` });
-        }
-        // Check numbers are valid integers
-        if (!validator.isInt(req.body[field].toString(), { min: 0 })) {
-            return res.status(400).json({ error: `${field} must be a positive integer` });
-        }
-    }
+  for (let field of requiredFields) {
+      if (!req.query[field] || validator.isEmpty(req.query[field].toString())) {
+          return res.status(400).json({ error: `${field} is required for ${building_type}` });
+      }
+      if (!validator.isInt(req.query[field].toString(), { min: 0 })) {
+          return res.status(400).json({ error: `${field} must be a positive integer` });
+      }
+  }
 
-    next();
+  next();
 };
 
 
-// AGENT TABLE QUERY VALIDATION
+
+// AGENT TABLE QUERY VALIDATION WITHIN POSTMAN
 export const agentRegionValidator = (req, res, next) => {
     const { region } = req.query;  // Assuming region is passed as a query parameter
   
@@ -75,7 +76,7 @@ export const agentRegionValidator = (req, res, next) => {
     }
   
     // List of predefined valid regions (you could also fetch this dynamically from the database if needed)
-    const allowedRegions = ["North", "South", "East", "West"];
+    const allowedRegions = ["north", "south", "east", "west"];
     
     // Check if the region passed is in the predefined list
     if (!allowedRegions.includes(region)) {

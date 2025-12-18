@@ -15,6 +15,8 @@ const getAllAgents = asyncWrapper( async (req,res) => {
 });
 
 //UPDATED "AGENTSBYREGION" TO INCLUDE SORTING AND COLORS
+//"NO RESIDENTIAL.JS FOR FRONT END CONNECTED, FOR EXAMPLE, DUE TO HTML PRIMARILY COMMUNICATING 
+//WITH BACK END VIA JSON"
 const getAgentsByRegion = asyncWrapper(async (req, res) => {
   const { firstName, lastName, fee, rating, region, sortBy = "name", sortDirection = "asc" } = req.query;
 

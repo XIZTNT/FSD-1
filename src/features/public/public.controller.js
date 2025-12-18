@@ -2,10 +2,9 @@
 const Data = require('../../shared/resources/data');
 //Contact Us Schema Import
 const Contact = require ('../../shared/db/mongodb/schemas/contact.Schema')
-const Quote = require ('../../shared/db/mongodb/schemas/quote.Schema')
 
 //I need to use with building types for request quote portion
-const validator = require('validator');
+// const validator = require('validator');
 
 //Contact Us Controller
 const contactUs = async (req,res) => {
@@ -110,16 +109,18 @@ const calculateQuote = (req, res) => {
   });
 };
 
-//AGENT TABLE
+//FIXATED ON CURRENT AGENT CONTROLLER DUE TO WORKING WITH MONGODB SCHEMA AND OTHER REQUIREMENTS NECESSARY
+//FOR SEPARATION
+
+
+module.exports = {contactUs,calculateQuote};
 
 
 
 
 
 
-
-
-//NOTES FOR CONTACT US CONTROLLER: 
+// /NOTES FOR CONTACT US CONTROLLER: 
 //Watch video, FOR DEMO FOR ROAD MAP, AND PREDETERMINED, AND ADD THINGS FOR HEALTH
 //WILL NEED TO REUSE, JAVASCRIPT FILES WILL BE USED AND LET'S SAY 
 //RESIDENTIAL.JS FILE that will HOLD AGENTS FOR THE TABLE AND THE QUOTE.JS AND GAIN EACCESS TO THE HTML
@@ -186,5 +187,3 @@ const calculateQuote = (req, res) => {
 //     res.status(500).json({ error: "Failed to calculate quote" });
 //   }
 // };
-
-module.exports = {contactUs,calculateQuote};
