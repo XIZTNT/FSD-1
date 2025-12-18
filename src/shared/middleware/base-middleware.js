@@ -5,7 +5,7 @@ const app = Express();
 const adminRoutes = [
   '/email-list',
   '/region-avg',
-  // '/calc'
+  // '/calc' commented out for now to avoid token errors preventing me from testing code
 ];
 
 const registerBaseMiddleWare = (app) => {
