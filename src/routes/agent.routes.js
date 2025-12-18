@@ -1,5 +1,4 @@
 const AgentController = require('../features/agent/agent.controller');
-
 const registerAgentRoutes = (app) => {
   app.post('/agent-create', AgentController.createAgent);
 
