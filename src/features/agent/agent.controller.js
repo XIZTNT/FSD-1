@@ -18,34 +18,44 @@ const getAllAgents = asyncWrapper( async (req,res) => {
 //"NO RESIDENTIAL.JS FOR FRONT END CONNECTED, FOR EXAMPLE, DUE TO HTML PRIMARILY COMMUNICATING 
 //WITH BACK END VIA JSON"
 const getAgentsByRegion = asyncWrapper(async (req, res) => {
-  const { firstName, lastName, fee, rating, region, sortBy = "name", sortDirection = "asc" } = req.query;
+  const { firstName, lastName, fee, rating, region } = req.query;
 
-  let filters = {};
-  if (firstName) filters.first_name = new RegExp(firstName, 'i');
-  if (lastName) filters.last_name = new RegExp(lastName, 'i');
-  if (fee) filters.fee = fee;
-  if (rating) filters.rating = rating;
-  if (region) filters.region = region.toLowerCase();
+  // ---------------- Filters ----------------
+  const filters = {};
+  if (region && region !== '') filters.region = region.toLowerCase();
 
-  let sortOptions = {};
-  if (sortBy === "name") sortOptions.last_name = sortDirection === "asc" ? 1 : -1;
-  else if (sortBy === "rating") sortOptions.rating = sortDirection === "asc" ? 1 : -1;
-  else if (sortBy === "fee") sortOptions.fee = sortDirection === "asc" ? 1 : -1;
+  // ---------------- Sorting ----------------
+  const sortOptions = {};
 
+  // Handle first name sorting
+  if (firstName && firstName !== 'all') {
+    sortOptions.first_name = firstName === 'asc' ? 1 : -1;
+  }
+
+  // Handle last name sorting
+  if (lastName && lastName !== 'all') {
+    sortOptions.last_name = lastName === 'asc' ? 1 : -1;
+  }
+
+  // Handle fee sorting
+  if (fee && fee !== 'all') {
+    sortOptions.fee = fee === 'asc' ? 1 : -1;
+  }
+
+  // Handle rating sorting
+  if (rating && rating !== 'all') {
+    sortOptions.rating = rating === 'asc' ? 1 : -1;
+  }
+
+  // ---------------- Query ----------------
   try {
-      const agents = await Agent.find(filters).sort(sortOptions);
-
-      if (!agents.length) {
-          return res.status(404).json({ msg: 'No agents found matching the criteria.' });
-      }
-
-      res.status(200).json({ agents }); // Send raw agents only
+    const agents = await Agent.find(filters).sort(sortOptions);
+    res.status(200).json({ agents });
   } catch (err) {
-      res.status(500).json({ msg: "Error fetching agents.", error: err.message });
+    res.status(500).json({ msg: "Error fetching agents.", error: err.message });
   }
 });
-
-
+  
 //END OF UPDATED "AGENTSBYREGION" TO INCLUDE SORTING AND COLORS
 
 const updateAgentInfo = asyncWrapper( async (req,res) => {
@@ -71,7 +81,6 @@ const deleteAgent = asyncWrapper( async (req,res) => {
   }
   res.status(201).json({ msg:'Agent deleted', agent });  
 });
-
 
 
 module.exports = {

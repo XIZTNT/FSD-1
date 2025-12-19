@@ -1,4 +1,4 @@
-//FRONT-END INTERACTION WITH BACKEND FOR QUOTE CALCULATION
+//FRONT-END INTERACTION WITH BACKEND FOR QUOTE FORM HTML CALCULATION
 async function updateBackendQuote() {
   const params = new URLSearchParams({
     building_type: buildingType_select.value,
@@ -20,7 +20,6 @@ async function updateBackendQuote() {
 }
 
 
-  
 
 //QUOTE.HTML DIRECT QUOTE PAGE FORM (Consolidated Old Code)
 "use strict";

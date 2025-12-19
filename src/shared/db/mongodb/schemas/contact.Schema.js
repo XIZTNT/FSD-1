@@ -8,24 +8,15 @@ fullname: {
     trim:true,
     required:true
 },
-email: {
-    type:String,
-    trim:true,
-    required:true,
-    validate: function (v){
-        return validator.isEmail(v);
-    },
-    message: props => `${props.value} is not a valid email!`
-},
 phone: {
-    type:String,
-    trim:true,
-    required:true,
+    type: String,
+    trim: true,
+    required: true,
     validate: {
-        validator: function (v) {
+        validator: function(v) {
             return validator.isMobilePhone(v, 'any');
         },
-        messaage: props => `${props.value} is not a valid phone number!`
+        message: props => `${props.value} is not a valid phone number!`
     }
 },
 company_name: {

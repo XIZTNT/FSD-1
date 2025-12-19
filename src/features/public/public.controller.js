@@ -7,12 +7,10 @@ const Contact = require ('../../shared/db/mongodb/schemas/contact.Schema')
 // const validator = require('validator');
 
 //Contact Us Controller
-const contactUs = async (req,res) => {
-
+const contactUs = async (req, res) => {
   const { fullname, email, phone, company_name, project_name, project_description, department, message } = req.body;
 
   try {
-
     // Create a new document using the Contact schema
     const newContact = new Contact({
       fullname,
@@ -28,14 +26,21 @@ const contactUs = async (req,res) => {
     // Save it to MongoDB
     await newContact.save();
 
-    // Send a simple confirmation, with JSON to communicate with HTML script
+    // Send a simple confirmation
     res.status(201).json({ message: `Message received from ${fullname}` });
-
   } catch (err) {
     console.error(err);
+
+    // ---------------- Handle validation errors ----------------
+    if (err.name === "ValidationError") {
+      return res.status(400).json({ errors: err.errors }); // <-- This is what frontend expects
+    }
+
+    // Fallback for other errors
     res.status(500).json({ error: "Failed to submit contact form" });
   }
 };
+
 
 // NEW QUOTE CONTROLLER
 const calculateQuote = (req, res) => {  

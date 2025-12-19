@@ -68,20 +68,18 @@ export const quoteValidator = (req, res, next) => {
 
 // AGENT TABLE QUERY VALIDATION WITHIN POSTMAN
 export const agentRegionValidator = (req, res, next) => {
-    const { region } = req.query;  // Assuming region is passed as a query parameter
-  
-    // Required region check
-    if (validator.isEmpty(region || "")) {
-      return res.status(400).json({ error: "Region is required" });
-    }
-  
-    // List of predefined valid regions (you could also fetch this dynamically from the database if needed)
-    const allowedRegions = ["north", "south", "east", "west"];
-    
-    // Check if the region passed is in the predefined list
-    if (!allowedRegions.includes(region)) {
-      return res.status(400).json({ error: "Invalid region provided" });
-    }
-  
-    next(); // Proceed with the query if region is valid
-  };
+  const { region } = req.query;
+
+  // If region is NOT provided, skip validation
+  if (!region) {
+    return next();
+  }
+
+  const allowedRegions = ["north", "south", "east", "west"];
+
+  if (!allowedRegions.includes(region.toLowerCase())) {
+    return res.status(400).json({ error: "Invalid region provided" });
+  }
+
+  next();
+};

@@ -22,8 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
       message: document.getElementById("message").value,
     };
 
-    console.log("📦 jsonBody:", jsonBody);
-//Have the fetch point to the local ENV port instead of the local liveserver at 5500. 
+    console.log("Form Contents", jsonBody);
+
     try {
       const response = await fetch("http://localhost:3004/contact-us", {
         method: "POST",
@@ -35,21 +35,34 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Server result:", result);
 
       if (response.ok) {
-        // ✅ Show the Bootstrap modal instead of alert
+        // Show the Bootstrap modal instead of alert
         if (window.$) {
-          // jQuery + Bootstrap 3/4 style
           $("#success-message").modal("show");
         } else if (window.bootstrap) {
-          // Bootstrap 5 no-jQuery style (just in case)
           const modalEl = document.getElementById("success-message");
           const modal = new bootstrap.Modal(modalEl);
           modal.show();
         }
 
-        // ✅ Clear the form AFTER success
+        // Form reset after successful submission
         form.reset();
       } else {
-        alert("FAILED");
+        // ---------------- Custom validation error alert ----------------
+        let errorMessage = "Failed to save contact.";
+
+        // Check if Mongoose returned validation errors (backend sends { errors: ... })
+        if (result.errors) {
+          const errors = result.errors;
+
+          if (errors.email) {
+            errorMessage += ` Invalid email: ${errors.email.message}.`;
+          }
+          if (errors.phone) {
+            errorMessage += ` Invalid phone: ${errors.phone.message}.`;
+          }
+        }
+
+        alert(errorMessage);
       }
     } catch (err) {
       console.error(err);

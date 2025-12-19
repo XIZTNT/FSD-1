@@ -313,62 +313,70 @@
 
         <div id="agentTableContainer">
             <table id="agents-table" class="table">
-                <thead>
-                    <tr>
-                        <th id="sort-first-name">
-                            First Name
-                            <div class="filter-dropdown">
-                                <select id="filter-first-name" class="filter-select">
-                                    <option value="">All</option>
-                                    <!-- Populate options dynamically -->
-                                </select>
-                            </div>
-                        </th>
-                        <th id="sort-last-name">
-                            Last Name
-                            <div class="filter-dropdown">
-                                <select id="filter-last-name" class="filter-select">
-                                    <option value="">All</option>
-                                    <!-- Populate options dynamically -->
-                                </select>
-                            </div>
-                        </th>
-                        <th id="sort-fee">
-                            Fee
-                            <div class="filter-dropdown">
-                                <select id="filter-fee" class="filter-select">
-                                    <option value="">All</option>
-                                    <!-- Populate options dynamically -->
-                                </select>
-                            </div>
-                        </th>
-                        <th id="sort-rating">
-                            Rating
-                            <div class="filter-dropdown">
-                                <select id="filter-rating" class="filter-select">
-                                    <option value="">All</option>
-                                    <!-- Populate options dynamically -->
-                                </select>
-                            </div>
-                        </th>
-                        <th id="sort-region">
-                            Region
-                            <div class="filter-dropdown">
-                                <select id="filter-region" class="filter-select">
-                                    <option value="">All</option>
-                                    <option value="north">North</option>
-                                    <option value="south">South</option>
-                                    <option value="east">East</option>
-                                    <option value="west">West</option>
-                                </select>
-                            </div>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Agent data will go here -->
-                </tbody>
-            </table>
+				<thead>
+				  <tr>
+					<th>
+					  First Name
+					  <div class="filter-dropdown">
+						<select id="filter-first-name" class="filter-select">
+						  <option value="all">All First Names</option>
+						  <option value="asc">First Name: A → Z</option>
+						  <option value="desc">First Name: Z → A</option>
+						</select>
+					  </div>
+					</th>
+			  
+					<th>
+					  Last Name
+					  <div class="filter-dropdown">
+						<select id="filter-last-name" class="filter-select">
+						  <option value="all">All Last Names</option>
+						  <option value="asc">Last Name: A → Z</option>
+						  <option value="desc">Last Name: Z → A</option>
+						</select>
+					  </div>
+					</th>
+			  
+					<th>
+					  Fee
+					  <div class="filter-dropdown">
+						<select id="filter-fee" class="filter-select">
+						  <option value="all">All Fees</option>
+						  <option value="asc">Fee: Low → High</option>
+						  <option value="desc">Fee: High → Low</option>
+						</select>
+					  </div>
+					</th>
+			  
+					<th>
+					  Rating
+					  <div class="filter-dropdown">
+						<select id="filter-rating" class="filter-select">
+						  <option value="all">All Ratings</option>
+						  <option value="desc">Rating: Highest First</option>
+						  <option value="asc">Rating: Lowest First</option>
+						</select>
+					  </div>
+					</th>
+			  
+					<th>
+					  Region
+					  <div class="filter-dropdown">
+						<select id="filter-region" class="filter-select">
+						  <option value="">All Regions</option>
+						  <option value="north">North</option>
+						  <option value="east">East</option>
+						  <option value="west">West</option>
+						  <option value="south">South</option>
+						</select>
+					  </div>
+					</th>
+				  </tr>
+				</thead>
+				<tbody>
+				  <!-- Agent data will be populated here -->
+				</tbody>
+			  </table>			  
         </div>
     </div>
 </section>
