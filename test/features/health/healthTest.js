@@ -5,7 +5,9 @@ const HealthController = require('../../../src/features/health/health.controller
 const ResponseUtil = require('../../../src/shared/utils/response-util').ResponseUtil;
 
 describe('HealthController', () => {
+  //All tests for HealthController go inside this block
   afterEach(() => {
+    //Changes reset after each test runs/
     sinon.restore();
   });
 
@@ -44,5 +46,6 @@ describe('HealthController', () => {
       void HealthController.error(new Error(errorMessage));
     });
   });
-
+  
+//Individual tests end here
 });

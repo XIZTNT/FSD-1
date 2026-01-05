@@ -1,22 +1,34 @@
 const Agent = require('../../shared/db/mongodb/schemas/agent.Schema')
 const asyncWrapper = require('../../shared/util/base-utils')
-//COLOR BY RATING UTILITY (NEED TO)
+const { ResponseUtil } = require('../../shared/utils/response-util')
+
+// COLOR BY RATING UTILITY (NEED TO)
 // const getColorByRating = require('../../shared/util/getColorByRating');
 
-const createAgent = asyncWrapper( async (req,res) => {
-  const agent = await  Agent.create(req.body);
-  res.status(201).json({ msg: 'Agent created', data: agent }); 
+const createAgent = asyncWrapper(async (req, res) => {
+  // ORIGINAL: create agent using request body
+  const agent = await Agent.create(req.body);
+
+  // UPDATED: standardized success response
+  ResponseUtil.respondOk(res, agent, 'Agent created', 201);
 });
 
-const getAllAgents = asyncWrapper( async (req,res) => {
+const getAllAgents = asyncWrapper(async (req, res) => {
+  // ORIGINAL: fetch all agents
   const agents = await Agent.find({});
-  const agentsAlpha = agents.sort((a, b) => a.last_name.localeCompare(b.last_name));
-  res.status(200).json({ data: agentsAlpha });
+
+  // ORIGINAL: alphabetical sorting by last name
+  const agentsAlpha = agents.sort((a, b) =>
+    a.last_name.localeCompare(b.last_name)
+  );
+
+  // UPDATED: standardized success response
+  ResponseUtil.respondOk(res, agentsAlpha, 'Agents retrieved');
 });
 
-//UPDATED "AGENTSBYREGION" TO INCLUDE SORTING AND COLORS
-//"NO RESIDENTIAL.JS FOR FRONT END CONNECTED, FOR EXAMPLE, DUE TO HTML PRIMARILY COMMUNICATING 
-//WITH BACK END VIA JSON"
+// UPDATED "AGENTSBYREGION" TO INCLUDE SORTING AND COLORS
+// "NO RESIDENTIAL.JS FOR FRONT END CONNECTED, FOR EXAMPLE, DUE TO HTML PRIMARILY COMMUNICATING
+// WITH BACK END VIA JSON"
 const getAgentsByRegion = asyncWrapper(async (req, res) => {
   const { firstName, lastName, fee, rating, region } = req.query;
 
@@ -50,38 +62,63 @@ const getAgentsByRegion = asyncWrapper(async (req, res) => {
   // ---------------- Query ----------------
   try {
     const agents = await Agent.find(filters).sort(sortOptions);
-    res.status(200).json({ agents });
+
+    // UPDATED: standardized success response
+    ResponseUtil.respondOk(res, agents, 'Agents filtered by region');
   } catch (err) {
-    res.status(500).json({ msg: "Error fetching agents.", error: err.message });
+    // UPDATED: standardized error response
+    ResponseUtil.respondError(res, err.message, 'Error fetching agents', 500);
   }
 });
-  
-//END OF UPDATED "AGENTSBYREGION" TO INCLUDE SORTING AND COLORS
 
-const updateAgentInfo = asyncWrapper( async (req,res) => {
-  const { id:agentID } = req.params;
-  const agent = await Agent.findByIdAndUpdate({ _id:agentID }, req.body, {
-    new:true,
-    runValidators:true
-  });
+// END OF UPDATED "AGENTSBYREGION" TO INCLUDE SORTING AND COLORS
+
+const updateAgentInfo = asyncWrapper(async (req, res) => {
+  const { id: agentID } = req.params;
+
+  // ORIGINAL: update agent by ID
+  const agent = await Agent.findByIdAndUpdate(
+    { _id: agentID },
+    req.body,
+    {
+      new: true,
+      runValidators: true
+    }
+  );
+
+  // ORIGINAL: escape clause if agent not found
   if (!agent) {
-    return res.status(404).json({ msg:`No agent with id ${agentID}` })    
+    return ResponseUtil.respondError(
+      res,
+      null,
+      `No agent with id ${agentID}`,
+      404
+    );
   }
-  res.status(200).json({ agent }) 
+
+  // UPDATED: standardized success response
+  ResponseUtil.respondOk(res, agent, 'Agent updated');
 });
 
-const deleteAgent = asyncWrapper( async (req,res) => {
-  const { id:agentID } = req.params;
-  const agent = await Agent.findOneAndDelete({ _id: agentID });   
+const deleteAgent = asyncWrapper(async (req, res) => {
+  const { id: agentID } = req.params;
+
+  // ORIGINAL: delete agent by ID
+  const agent = await Agent.findOneAndDelete({ _id: agentID });
+
+  // ORIGINAL: escape clause if agent not found
   if (!agent) {
-    return res.status(404).json({ msg:`No agent with id ${agentID}` })    
+    return ResponseUtil.respondError(
+      res,
+      null,
+      `No agent with id ${agentID}`,
+      404
+    );
   }
-  if (agent.length > 1) {
-    return res.status(404).json({ msg:'Multiple agents returned, can only delete one at a time' })    
-  }
-  res.status(201).json({ msg:'Agent deleted', agent });  
-});
 
+  // UPDATED: standardized success response
+  ResponseUtil.respondOk(res, agent, 'Agent deleted', 201);
+});
 
 module.exports = {
   createAgent,

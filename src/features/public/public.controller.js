@@ -1,17 +1,22 @@
+//Contact Us Schema Import
+const Contact = require('../../shared/db/mongodb/schemas/contact.Schema');
+const { ResponseUtil } = require('../../shared/utils/response-util');
+
 //I believe will be necessary for agent table creation
 const Data = require('../../shared/resources/data');
-//Contact Us Schema Import
-const Contact = require ('../../shared/db/mongodb/schemas/contact.Schema')
 
-//I need to use with building types for request quote portion
-// const validator = require('validator');
+//const validator = require('validator'); // You might need this for future validations
 
 //Contact Us Controller
 const contactUs = async (req, res) => {
-  const { fullname, email, phone, company_name, project_name, project_description, department, message } = req.body;
+  const {
+    fullname, email, phone, company_name,
+    project_name, project_description,
+    department, message
+  } = req.body;
 
   try {
-    // Create a new document using the Contact schema
+    // ORIGINAL: Create a new document using the Contact schema
     const newContact = new Contact({
       fullname,
       email,
@@ -23,27 +28,34 @@ const contactUs = async (req, res) => {
       message
     });
 
-    // Save it to MongoDB
+    // ORIGINAL: Save it to MongoDB
     await newContact.save();
 
-    // Send a simple confirmation
-    res.status(201).json({ message: `Message received from ${fullname}` });
+    // UPDATED: standardized success response
+    ResponseUtil.respondOk(
+      res,
+      null,
+      `Message received from ${fullname}`,
+      201
+    );
   } catch (err) {
     console.error(err);
 
     // ---------------- Handle validation errors ----------------
     if (err.name === "ValidationError") {
-      return res.status(400).json({ errors: err.errors }); // <-- This is what frontend expects
+      // UPDATED: standardized validation error response
+      return ResponseUtil.respondError(res, err.errors, 'Validation error', 400);
     }
 
     // Fallback for other errors
-    res.status(500).json({ error: "Failed to submit contact form" });
+    // UPDATED: standardized general error response
+    ResponseUtil.respondError(res, err.message, 'Failed to submit contact form', 500);
   }
 };
 
 
 // NEW QUOTE CONTROLLER
-const calculateQuote = (req, res) => {  
+const calculateQuote = (req, res) => {
   let { building_type, numFloors, numApts, maxOccupancy, tier, regular_elevators, freight_elevators } = req.query;
 
   // Convert numeric strings to numbers
@@ -104,21 +116,22 @@ const calculateQuote = (req, res) => {
   const installationFee = elevatorCost * installRate;
   const totalCost = elevatorCost + installationFee;
 
-  // Return JSON with results
-  res.json({
+  // UPDATED: standardized success response
+  ResponseUtil.respondOk(res, {
     elevatorCount,
     unitPrice,
     elevatorCost,
     installationFee,
     totalCost
-  });
+  }, 'Quote calculated');
 };
 
 //FIXATED ON CURRENT AGENT CONTROLLER DUE TO WORKING WITH MONGODB SCHEMA AND OTHER REQUIREMENTS NECESSARY
 //FOR SEPARATION
 
 
-module.exports = {contactUs,calculateQuote};
+module.exports = { contactUs, calculateQuote };
+
 
 
 

@@ -6,7 +6,11 @@
   "scripts": {
     "start": "nodemon app.js",
     "test": "mocha ./test/features/**/*.js",
-    "test_health": "mocha ./test/features/health/healthTest.js"
+    "test_health": "mocha ./test/features/health/healthTest.js",
+    "test_admin": "mocha ./test/features/admin/adminTest.js",
+    "test_agent": "mocha ./test/features/agent/agentTest.js",
+    "test_public": "mocha ./test/features/public/publicTest.js",
+    "test_region": "mocha ./test/features/region/regionTest.js"
   },
   "keywords": [],
   "author": "",
