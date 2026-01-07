@@ -1,7 +1,7 @@
-const chai = require('chai');
+const chai = require('chai'); 
 const sinon = require('sinon');
 const { ResponseUtil } = require('../../../src/shared/utils/response-util');
-const AdminController = require('../../../src/features/admin/admin.controller');
+const AdminController = require('../../../src/features/controllers/admin/admin.controller');
 const Data = require('../../../src/shared/resources/data');
 
 // Start your test suite for AdminController

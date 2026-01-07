@@ -1,10 +1,31 @@
+// Updated response-util.js to be more centralized 
+
 const ResponseUtil = {
-  respondOk: (res,data,message)=>{
-    res.json({type:'success',data,message});
+  // Standardized success response
+  respondOk: (res, data = null, message = "Success", statusCode = 200) => {
+    res.status(statusCode).json({
+      type: "success",
+      data,
+      message
+    });
   },
-  respondError: (res,data,message)=>{
-    res.json({type:'error',data,message});
+
+  // Standardized error response
+  respondError: (res, error = null, message = "Error", statusCode = 400) => {
+    res.status(statusCode).json({
+      type: "error",
+      error,
+      message
+    });
+  },
+
+  // A general-purpose handler for validation or other error cases
+  handleError: (res, err, defaultMessage = "Something went wrong") => {
+    if (err.name === "ValidationError") {
+      return this.respondError(res, err.errors, 'Validation error', 400);
+    }
+    return this.respondError(res, err.message, defaultMessage, 500);
   }
 };
 
-module.exports = {ResponseUtil};
+module.exports = { ResponseUtil };

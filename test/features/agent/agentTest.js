@@ -1,7 +1,7 @@
 const chai = require('chai');
 const sinon = require('sinon');
 const { ResponseUtil } = require('../../../src/shared/utils/response-util');
-const AgentController = require('../../../src/features/agent/agent.controller');
+const AgentController = require('../../../src/features/controllers/agent/agent.controller');
 const Agent = require('../../../src/shared/db/mongodb/schemas/agent.Schema.js'); //MongoDB model
 
 describe('AgentController', () => {

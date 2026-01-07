@@ -1,4 +1,4 @@
-const AgentController = require('../features/agent/agent.controller');
+const AgentController = require('../features/controllers/agent/agent.controller');
 const {agentRegionValidator} = require ('../shared/middleware/validator-middleware');
 
 const registerAgentRoutes = (app) => {

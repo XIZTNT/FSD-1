@@ -1,7 +1,7 @@
 const chai = require('chai');
 const sinon = require('sinon');
 const { ResponseUtil } = require('../../../src/shared/utils/response-util');
-const PublicController = require('../../../src/features/public/public.controller');
+const PublicController = require('../../../src/features/controllers/public/public.controller');
 const Contact = require('../../../src/shared/db/mongodb/schemas/contact.Schema'); // Your MongoDB model
 
 describe('PublicController', () => {
@@ -29,12 +29,17 @@ describe('PublicController', () => {
       // Stub ResponseUtil to avoid sending actual responses
       const respondOkStub = sinon.stub(ResponseUtil, 'respondOk').callsFake((res, data, message) => {
         chai.assert.equal(message, 'Message received from John Doe');
-        chai.assert.deepEqual(data, contactData);
-        done();
+        
+        // Remove the _id field before comparison
+        const actualData = { ...data._doc };  // Extract _doc which contains actual data
+        delete actualData._id;  // Remove _id from the comparison
+        
+        chai.assert.deepEqual(actualData, contactData);  // Compare the data without _id
+        done();  // Ensure done is called to signal Mocha the test is complete
       });
 
-      // Call the controller method
-      PublicController.contactUs({ body: contactData }, {});
+      // Call the controller method, handle async completion
+      PublicController.contactUs({ body: contactData }, {}).catch(done);  // Handle async error if any
     });
 
     it('should handle validation errors gracefully', (done) => {
@@ -57,11 +62,11 @@ describe('PublicController', () => {
       // Stub ResponseUtil to handle error response
       const respondErrorStub = sinon.stub(ResponseUtil, 'respondError').callsFake((res, data, message) => {
         chai.assert.equal(message, 'Failed to submit contact form');
-        done();
+        done();  // Ensure done is called to signal Mocha the test is complete
       });
 
-      // Call the controller method
-      PublicController.contactUs({ body: contactData }, {});
+      // Call the controller method, handle async completion
+      PublicController.contactUs({ body: contactData }, {}).catch(done);  // Handle async error if any
     });
   });
 
@@ -82,7 +87,7 @@ describe('PublicController', () => {
       const respondOkStub = sinon.stub(ResponseUtil, 'respondOk').callsFake((res, data, message) => {
         chai.assert.equal(message, 'Quote calculated');
         chai.assert.equal(data.elevatorCount, 2); // Based on your logic
-        done();
+        done();  // Ensure done is called to signal Mocha the test is complete
       });
 
       // Call the controller method

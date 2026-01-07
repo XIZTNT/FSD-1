@@ -1,51 +1,78 @@
 const chai = require('chai');
 const sinon = require('sinon');
-//Changed file path to have extra "../" to match test folder structure
-const HealthController = require('../../../src/features/health/health.controller');
-const ResponseUtil = require('../../../src/shared/utils/response-util').ResponseUtil;
+const { ResponseUtil } = require('../../../src/shared/utils/response-util');
+const HealthController = require('../../../src/features/controllers/health/health.controller');
+
+const { expect } = chai;
 
 describe('HealthController', () => {
-  //All tests for HealthController go inside this block
+
   afterEach(() => {
-    //Changes reset after each test runs/
+    // Ensure all stubs are reset after each test
     sinon.restore();
   });
 
   describe('#helloWorld()', () => {
-    it('respond with Hello World', (done) => {
-      sinon.stub(ResponseUtil, 'respondOk').callsFake((res, data, message) => {
-        chai.assert.equal(message, 'Hello World');
-        done();
-      });
+    it('responds with Hello World', () => {
+      const res = {
+        status: sinon.stub().returnsThis(),
+        json: sinon.stub()
+      };
 
-      void HealthController.helloWorld();
+      const respondOkStub = sinon.stub(ResponseUtil, 'respondOk');
+
+      // Call helloWorld with mock req and res
+      HealthController.helloWorld({}, res);
+
+      // Log to see what the stub was called with
+      console.log(respondOkStub.args);  // Debugging line
+
+      // Check if the stub was called
+      expect(respondOkStub.calledOnce).to.be.true;
+      expect(respondOkStub.calledWith(res, null, 'Hello World')).to.be.true; // Adjusted expectation
     });
   });
 
-  //Status Testing
   describe('#status()', () => {
-    it('respond with status ok', (done) => {
-      sinon.stub(ResponseUtil, 'respondOk').callsFake((res, data, message) => {
-        chai.assert.equal(message, 'Status OK');
-        done();
-      });
+    it('responds with status ok', () => {
+      const res = {
+        status: sinon.stub().returnsThis(),
+        json: sinon.stub()
+      };
 
-      void HealthController.status();
+      const respondOkStub = sinon.stub(ResponseUtil, 'respondOk');
+
+      // Call status with mock req and res
+      HealthController.status({}, res);
+
+      // Log to see what the stub was called with
+      console.log(respondOkStub.args);  // Debugging line
+
+      // Check if the stub was called
+      expect(respondOkStub.calledOnce).to.be.true;
+      expect(respondOkStub.calledWith(res, null, 'Status OK')).to.be.true; // Adjusted expectation
     });
   });
 
-  //Error Testing
   describe('#error()', () => {
-    it('respond with error message', (done) => {
-      const errorMessage = 'Test Error Message';
-      sinon.stub(ResponseUtil, 'respondError').callsFake((res, error, message) => {
-        chai.assert.equal(message, errorMessage);
-        done();
-      });
+    it('responds with error message', () => {
+      const res = {
+        status: sinon.stub().returnsThis(),
+        json: sinon.stub()
+      };
 
-      void HealthController.error(new Error(errorMessage));
+      const respondErrorStub = sinon.stub(ResponseUtil, 'respondError');
+
+      // Call error with mock req and res
+      HealthController.error({}, res);
+
+      // Log to see what the stub was called with
+      console.log(respondErrorStub.args);  // Debugging line
+
+      // Check if the stub was called
+      expect(respondErrorStub.calledOnce).to.be.true;
+      expect(respondErrorStub.calledWith(res, null, 'Test Error Message')).to.be.true; // Adjusted expectation
     });
   });
-  
-//Individual tests end here
+
 });

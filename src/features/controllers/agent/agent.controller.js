@@ -1,6 +1,6 @@
-const Agent = require('../../shared/db/mongodb/schemas/agent.Schema')
-const asyncWrapper = require('../../shared/util/base-utils')
-const { ResponseUtil } = require('../../shared/utils/response-util')
+const Agent = require('../../../shared/db/mongodb/schemas/agent.Schema')
+const asyncWrapper = require('../../../shared/util/base-utils')
+const { ResponseUtil } = require('../../../shared/utils/response-util')
 
 // COLOR BY RATING UTILITY (NEED TO)
 // const getColorByRating = require('../../shared/util/getColorByRating');

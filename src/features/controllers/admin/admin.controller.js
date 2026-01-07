@@ -1,7 +1,7 @@
-const Data = require('../../shared/resources/data');
-const { ResponseUtil } = require('../../shared/utils/response-util');
-//NEED
-//TO ASK WHAT IS THE DIFFERENCE BETWEEN LOGIC AND ESCAPE CLAUSE
+const Data = require('../../../shared/resources/data');
+const { ResponseUtil } = require('../../../shared/utils/response-util');
+
+
 const emailList = (req, res) => {
   // ORIGINAL LOGIC: collect agent emails
   const emails = Data.agents.map(agent => agent.email);
@@ -19,9 +19,9 @@ const regionAverage = (req, res) => {
     agent => agent.region.toLowerCase() === region
   );
 
-  // ORIGINAL ESCAPE CLAUSE
+  // ORIGINAL ESCAPE CLAUSE: check if no agents found for the region
   if (!agents.length) {
-    // UPDATED: standardized error response
+    // UPDATED: standardized error response using ResponseUtil
     return ResponseUtil.respondError(
       res,
       null,
@@ -30,27 +30,25 @@ const regionAverage = (req, res) => {
     );
   }
 
-  const avgRating =
-    agents.reduce((total, current) => {
-      return total + +current.rating;
-    }, 0) / agents.length;
+  // Calculate averages
+  const avgRating = (
+    agents.reduce((total, current) => total + +current.rating, 0) / agents.length
+  ).toFixed(2); // Fixed to 2 decimal places
 
-  const avgFee =
-    agents.reduce((total, current) => {
-      return total + +current.fee;
-    }, 0) / agents.length;
+  const avgFee = (
+    agents.reduce((total, current) => total + +current.fee, 0) / agents.length
+  ).toFixed(2); // Fixed to 2 decimal places
 
-  // UPDATED: use ResponseUtil instead of res.send
+  // UPDATED: use ResponseUtil for success response instead of res.send
   ResponseUtil.respondOk(
     res,
     {
       region,
-      average_rating: avgRating.toFixed(2),
-      average_fee: avgFee.toFixed(2)
+      average_rating: avgRating,
+      average_fee: avgFee
     },
     'Region averages calculated'
   );
 };
 
 module.exports = { emailList, regionAverage };
-

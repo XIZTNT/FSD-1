@@ -1,5 +1,5 @@
 
-const RegionController = require('../features/region/region.controller');
+const RegionController = require('../features/controllers/region/region.controller');
 
 const registerRegionRoutes = (app) => {
   app.post('/region-create', RegionController.createRegion);

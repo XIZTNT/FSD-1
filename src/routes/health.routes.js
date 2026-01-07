@@ -1,4 +1,4 @@
-const HealthController = require('../features/health/health.controller');
+const HealthController = require('../features/controllers/health/health.controller');
 
 const registerHealthRoutes = (app) => {
   app.get('/hello', HealthController.helloWorld);

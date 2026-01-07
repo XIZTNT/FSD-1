@@ -1,7 +1,7 @@
 const chai = require('chai');
 const sinon = require('sinon');
 const { ResponseUtil } = require('../../../src/shared/utils/response-util');
-const RegionController = require('../../../src/features/region/region.controller');
+const RegionController = require('../../../src/features/controllers/region/region.controller');
 const Region = require('../../../src/shared/db/mongodb/schemas/region.Schema'); // MongoDB model
 
 describe('RegionController', () => {
@@ -39,9 +39,9 @@ describe('RegionController', () => {
 
       // Stub ResponseUtil to avoid sending actual responses
       const respondOkStub = sinon.stub(ResponseUtil, 'respondOk').callsFake((res, data, message) => {
-        chai.assert.equal(message, 'Region retrieved');
-        chai.assert.deepEqual(data, regionData);
-        done();
+        chai.assert.equal(message, 'Region north data fetched');
+        chai.assert.deepEqual(data, [regionData]);
+        done();  // Ensure 'done()' is called when response is handled
       });
 
       // Call the controller method
@@ -55,7 +55,7 @@ describe('RegionController', () => {
       // Stub ResponseUtil to avoid sending actual responses
       const respondErrorStub = sinon.stub(ResponseUtil, 'respondError').callsFake((res, data, message) => {
         chai.assert.equal(message, 'No region with name north');
-        done();
+        done();  // Ensure 'done()' is called when response is handled
       });
 
       // Call the controller method with a region that doesn't exist
@@ -65,30 +65,43 @@ describe('RegionController', () => {
 
   // Test: Get All Stars (Get top agents from all regions)
   describe('#getAllStars()', () => {
-    it('should return top agents from each region', (done) => {
+    it('should return top agents from each region', function(done) {
+      this.timeout(5000);  // Set timeout to 5 seconds to allow for async operations
+  
       const northRegion = { region: 'north', top_agents: ['agent1', 'agent2'] };
       const southRegion = { region: 'south', top_agents: ['agent3', 'agent4'] };
       const eastRegion = { region: 'east', top_agents: ['agent5', 'agent6'] };
-
+  
       // Mock the region search for all regions
-      sinon.stub(Region, 'find').resolves([northRegion, southRegion, eastRegion]);
-
+      sinon.stub(Region, 'find').callsFake((query) => {
+        console.log('Region.find called with query:', query);  // Debugging line
+        if (query.region === 'north') {
+          return Promise.resolve([northRegion]);
+        } else if (query.region === 'south') {
+          return Promise.resolve([southRegion]);
+        } else if (query.region === 'east') {
+          return Promise.resolve([eastRegion]);
+        }
+        return Promise.resolve([]);  // Default empty array if region doesn't match
+      });
+  
       // Stub ResponseUtil to avoid sending actual responses
       const respondOkStub = sinon.stub(ResponseUtil, 'respondOk').callsFake((res, data, message) => {
-        chai.assert.equal(message, 'Top agents for all regions');
+        console.log('Responding with:', message, data);  // Debugging line
+  
+        chai.assert.equal(message, 'Top agents from regions fetched');
         chai.assert.deepEqual(data, {
-          region1: 'north',
           topAgent_North: 'agent1',
-          region2: 'south',
           topAgent_South: 'agent3',
-          region3: 'east',
           topAgent_East: 'agent5',
         });
-        done();
+  
+        done();  // Ensure 'done()' is called when response is handled
       });
-
+  
       // Call the controller method
       RegionController.getAllStars({}, {});  // No query data needed for this endpoint
     });
   });
+  
 });

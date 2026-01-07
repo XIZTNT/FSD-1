@@ -65,7 +65,6 @@ export const quoteValidator = (req, res, next) => {
 };
 
 
-
 // AGENT TABLE QUERY VALIDATION WITHIN POSTMAN
 export const agentRegionValidator = (req, res, next) => {
   const { region } = req.query;
