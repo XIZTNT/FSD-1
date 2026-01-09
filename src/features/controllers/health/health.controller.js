@@ -2,23 +2,31 @@ const { ResponseUtil } = require('../../../shared/utils/response-util');
 require('dotenv').config();
 const port = process.env.PORT || 3004;
 
+// HELLO WORLD
 const helloWorld = async (req, res) => {
-  //Debug log after response-util logic centralization
-  console.log('helloWorld method called');
-  ResponseUtil.respondOk(res, null, 'Hello World');
+  const message = 'Hello World';             //Variable for validation
+  console.log('helloWorld method called');  //Debug log
+  console.log('Message to send:', message); //Log w/ message
+
+  ResponseUtil.respondOk(res, { message }, message);
 };
 
+// STATUS
 const status = async (req, res) => {
-  //Debug log after response-util logic centralization
+  const message = 'Status OK';               // Variable for validation
   console.log('status method called');
-  ResponseUtil.respondOk(res, null, 'Status OK');
+  console.log('Message to send:', message);
+
+  ResponseUtil.respondOk(res, { message }, message);
 };
 
+// ERROR
 const error = async (req, res) => {
-  //Debug log after response-util logic centralization
+  const message = 'Test Error Message';      //Variable for validation
   console.log('error method called');
-  const errorMessage = 'Test Error Message';
-  ResponseUtil.respondError(res, null, errorMessage);
+  console.log('Message to send:', message);
+
+  ResponseUtil.respondError(res, null, message);
 };
 
 module.exports = { helloWorld, status, error };

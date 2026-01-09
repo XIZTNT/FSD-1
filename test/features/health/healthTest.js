@@ -29,7 +29,9 @@ describe('HealthController', () => {
 
       // Check if the stub was called
       expect(respondOkStub.calledOnce).to.be.true;
-      expect(respondOkStub.calledWith(res, null, 'Hello World')).to.be.true; // Adjusted expectation
+
+      // Updated expectation to match new controller: data is now { message }
+      expect(respondOkStub.calledWith(res, { message: 'Hello World' }, 'Hello World')).to.be.true;
     });
   });
 
@@ -50,7 +52,9 @@ describe('HealthController', () => {
 
       // Check if the stub was called
       expect(respondOkStub.calledOnce).to.be.true;
-      expect(respondOkStub.calledWith(res, null, 'Status OK')).to.be.true; // Adjusted expectation
+
+      // Updated expectation to match new controller: data is now { message }
+      expect(respondOkStub.calledWith(res, { message: 'Status OK' }, 'Status OK')).to.be.true;
     });
   });
 
@@ -71,7 +75,9 @@ describe('HealthController', () => {
 
       // Check if the stub was called
       expect(respondErrorStub.calledOnce).to.be.true;
-      expect(respondErrorStub.calledWith(res, null, 'Test Error Message')).to.be.true; // Adjusted expectation
+
+      // Updated expectation to match new controller: data is still null for error
+      expect(respondErrorStub.calledWith(res, null, 'Test Error Message')).to.be.true;
     });
   });
 
