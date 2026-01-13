@@ -25,4 +25,6 @@ const RegionSchema = new mongoose.Schema({
 
 }, { timestamps: true })
 
-module.exports = mongoose.model('Region', RegionSchema)
+//added 'regionswk6' so that although the model is connected to my cluster,
+//the cluster is specifically connected to the wk6 region collection
+module.exports = mongoose.model('Region', RegionSchema, 'regionsWk6')

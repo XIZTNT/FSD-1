@@ -3,7 +3,7 @@ const Region = require('../../../shared/db/mongodb/schemas/region.Schema');
 const { ResponseUtil } = require('../../../shared/utils/response-util');
 const asyncWrapper = require('../../../shared/util/base-utils');
 
-// Create Region
+// Create Region (need to add data within MONGO for WK6 so that other routes can work)
 const createRegion = asyncWrapper(async (req, res) => {
   // Create new region from request body
   const region = await Region.create(req.body);
@@ -16,10 +16,19 @@ const createRegion = asyncWrapper(async (req, res) => {
 const getRegion = asyncWrapper(async (req, res) => {
   const regionSelected = req.query.region;
 
-  // Find the region by name
-  const region = await Region.find({ region: regionSelected.toLowerCase() });
+  if (!regionSelected || typeof regionSelected !== 'string') {
+    return ResponseUtil.respondError(
+      res,
+      null,
+      'region query parameter is required',
+      400
+    );
+  }
 
-  // Escape clause if no region found
+  const region = await Region.find({
+    region: { $regex: `^${regionSelected}$`, $options: 'i' } // case-insensitive match
+  });
+
   if (!region.length) {
     return ResponseUtil.respondError(
       res,
@@ -29,9 +38,9 @@ const getRegion = asyncWrapper(async (req, res) => {
     );
   }
 
-  // Standardized success response
-  return ResponseUtil.respondOk(res, region, `Region ${regionSelected} data fetched`);  // Return the response
+  return ResponseUtil.respondOk(res, region, `Region ${regionSelected} data fetched`);
 });
+
 
 // Get top agents from North, South, and East regions
 const getAllStars = asyncWrapper(async (req, res) => {

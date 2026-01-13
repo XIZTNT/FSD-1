@@ -226,3 +226,15 @@ export const healthMessageValidator = (req, res, next) => {
 };
 
 //ADMIN/EMAIL LIST VALIDATOR
+export const emailListValidator = (req, res, next) => {
+  const { email } = req.query;
+
+  // If email filter is provided, validate it
+  if (email && !validator.isEmail(email)) {
+    return res.status(400).json({ error: 'Invalid email format' });
+  }
+
+  next();
+};
+
+//GetALL AGENTS VALIDATOR

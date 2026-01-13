@@ -1,14 +1,26 @@
+const validator = require('validator');
 const Data = require('../../../shared/resources/data');
 const { ResponseUtil } = require('../../../shared/utils/response-util');
 
 
 const emailList = (req, res) => {
-  // ORIGINAL LOGIC: collect agent emails
   const emails = Data.agents.map(agent => agent.email);
 
-  // UPDATED: use ResponseUtil instead of res.send
+  // Validate outgoing email data
+  const invalidEmails = emails.filter(email => !validator.isEmail(email));
+
+  if (invalidEmails.length > 0) {
+    return ResponseUtil.respondError(
+      res,
+      invalidEmails,
+      'Invalid email data detected',
+      500
+    );
+  }
+
   ResponseUtil.respondOk(res, emails, 'Email list retrieved');
 };
+
 
 const regionAverage = (req, res) => {
   // ORIGINAL: get region from query
