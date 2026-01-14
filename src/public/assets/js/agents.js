@@ -43,8 +43,8 @@ async function fetchAgents() {
         const response = await fetch(`http://localhost:3004/agents-by-region?${queryString}`);
         const data = await response.json();
 
-        if (data.agents && data.agents.length > 0) {
-            renderAgentTable(data.agents);  // Render the table with fetched data
+        if (data.data && data.data.length > 0) {
+            renderAgentTable(data.data);  // Render the table with fetched data
         } else {
             console.log("No agents found.");
         }
@@ -111,12 +111,12 @@ function handleSort(column) {
     fetchAgents();
 }
 
-// Attach event listeners to column headers for sorting
-document.getElementById("sort-first-name").addEventListener("click", () => handleSort("first_name"));
-document.getElementById("sort-last-name").addEventListener("click", () => handleSort("last_name"));
-document.getElementById("sort-fee").addEventListener("click", () => handleSort("fee"));
-document.getElementById("sort-rating").addEventListener("click", () => handleSort("rating"));
-document.getElementById("sort-region").addEventListener("click", () => handleSort("region"));
+// // Attach event listeners to column headers for sorting
+// document.getElementById("sort-first-name").addEventListener("click", () => handleSort("first_name"));
+// document.getElementById("sort-last-name").addEventListener("click", () => handleSort("last_name"));
+// document.getElementById("sort-fee").addEventListener("click", () => handleSort("fee"));
+// document.getElementById("sort-rating").addEventListener("click", () => handleSort("rating"));
+// document.getElementById("sort-region").addEventListener("click", () => handleSort("region"));
 
 // Initialize fetching of agent data when the page loads
 document.addEventListener("DOMContentLoaded", fetchAgents);

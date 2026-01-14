@@ -6,20 +6,15 @@ const { ResponseUtil } = require('../../../shared/utils/response-util');
 const emailList = (req, res) => {
   const emails = Data.agents.map(agent => agent.email);
 
-  // Validate outgoing email data
-  const invalidEmails = emails.filter(email => !validator.isEmail(email));
-
-  if (invalidEmails.length > 0) {
-    return ResponseUtil.respondError(
-      res,
-      invalidEmails,
-      'Invalid email data detected',
-      500
-    );
+  // Optional: filter by email query param
+  if (req.query.email) {
+    const filtered = emails.filter(e => e.toLowerCase() === req.query.email.toLowerCase());
+    return ResponseUtil.respondOk(res, filtered, 'Filtered email list retrieved');
   }
 
   ResponseUtil.respondOk(res, emails, 'Email list retrieved');
 };
+
 
 
 const regionAverage = (req, res) => {

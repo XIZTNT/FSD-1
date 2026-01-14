@@ -66,22 +66,34 @@ export const quoteValidator = (req, res, next) => {
 
 
 // AGENT TABLE QUERY VALIDATION WITHIN POSTMAN
-export const agentRegionValidator = (req, res, next) => {
-  const { region } = req.query;
+export const getAgentsByRegionValidator = (req, res, next) => {
+  const { region, firstName, lastName, fee, rating } = req.query;
 
-  // If region is NOT provided, skip validation
-  if (!region) {
-    return next();
+  const allowedRegions = ['north', 'south', 'east', 'west'];
+  const allowedSortValues = ['asc', 'desc', 'all'];
+
+  // If region is empty or missing, skip region validation
+  if (region && region.trim() !== '' && !allowedRegions.includes(region.toLowerCase())) {
+    return res.status(400).json({ error: 'Invalid region provided' });
   }
 
-  const allowedRegions = ["north", "south", "east", "west"];
+  const validateSort = (value, field) => {
+    if (value && !allowedSortValues.includes(value)) {
+      return res.status(400).json({
+        error: `${field} must be asc, desc, or all`
+      });
+    }
+  };
 
-  if (!allowedRegions.includes(region.toLowerCase())) {
-    return res.status(400).json({ error: "Invalid region provided" });
-  }
+  validateSort(firstName, 'firstName');
+  validateSort(lastName, 'lastName');
+  validateSort(fee, 'fee');
+  validateSort(rating, 'rating');
 
   next();
 };
+
+
 
 //BONUS: REMAINING APIS VALIDATION MIDDLEWARE
 //BONUS VALIDATION FOR ADMIN APIS
@@ -229,7 +241,7 @@ export const healthMessageValidator = (req, res, next) => {
 export const emailListValidator = (req, res, next) => {
   const { email } = req.query;
 
-  // If email filter is provided, validate it
+  // Only validate if email exists
   if (email && !validator.isEmail(email)) {
     return res.status(400).json({ error: 'Invalid email format' });
   }
@@ -237,4 +249,39 @@ export const emailListValidator = (req, res, next) => {
   next();
 };
 
-//GetALL AGENTS VALIDATOR
+
+
+// GET ALL AGENTS VALIDATOR
+export const getAllAgentsValidator = (req, res, next) => {
+  const allowedSortValues = ['asc', 'desc', 'all'];
+
+  const { firstName, lastName, fee, rating } = req.query;
+
+  const validateSort = (value, field) => {
+    if (value && !allowedSortValues.includes(value)) {
+      return res.status(400).json({
+        error: `${field} must be asc, desc, or all`
+      });
+    }
+  };
+
+  validateSort(firstName, 'firstName');
+  validateSort(lastName, 'lastName');
+  validateSort(fee, 'fee');
+  validateSort(rating, 'rating');
+
+  next();
+};
+
+//all-stars limit query param
+export const allStarsLimitValidator = (req, res, next) => {
+  const { limit } = req.query;
+
+  if (limit && (!Number.isInteger(+limit) || +limit <= 0)) {
+    return res.status(400).json({
+      error: 'Limit must be a positive integer'
+    });
+  }
+
+  next(); //
+};

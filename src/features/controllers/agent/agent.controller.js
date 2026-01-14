@@ -27,10 +27,9 @@ const getAllAgents = asyncWrapper(async (req, res) => {
 });
 
 // UPDATED "AGENTSBYREGION" TO INCLUDE SORTING AND COLORS
-// "NO RESIDENTIAL.JS FOR FRONT END CONNECTED, FOR EXAMPLE, DUE TO HTML PRIMARILY COMMUNICATING
-// WITH BACK END VIA JSON"
+// REFER TO AGENTS.JS (src/public/assets/js/agents.js) FOR FRONT END CONNECTION
 const getAgentsByRegion = asyncWrapper(async (req, res) => {
-  const { firstName, lastName, fee, rating, region } = req.query;
+  const { firstName, lastName, fee, rating, region, sortBy, sortDirection } = req.query;
 
   // ---------------- Filters ----------------
   const filters = {};
@@ -39,37 +38,40 @@ const getAgentsByRegion = asyncWrapper(async (req, res) => {
   // ---------------- Sorting ----------------
   const sortOptions = {};
 
-  // Handle first name sorting
-  if (firstName && firstName !== 'all') {
-    sortOptions.first_name = firstName === 'asc' ? 1 : -1;
+  // Use sortBy + sortDirection from frontend table header first
+  if (sortBy) {
+    const direction = sortDirection === 'desc' ? -1 : 1;
+
+    switch (sortBy) {
+      case 'first_name':
+      case 'last_name':
+      case 'fee':
+      case 'rating':
+      case 'region':
+        sortOptions[sortBy] = direction;
+        break;
+      default:
+        break; // ignore invalid sortBy
+    }
   }
 
-  // Handle last name sorting
-  if (lastName && lastName !== 'all') {
-    sortOptions.last_name = lastName === 'asc' ? 1 : -1;
-  }
-
-  // Handle fee sorting
-  if (fee && fee !== 'all') {
-    sortOptions.fee = fee === 'asc' ? 1 : -1;
-  }
-
-  // Handle rating sorting
-  if (rating && rating !== 'all') {
-    sortOptions.rating = rating === 'asc' ? 1 : -1;
-  }
+  // Then apply individual dropdowns (overrides header sort if set)
+  if (firstName && firstName !== 'all') sortOptions.first_name = firstName === 'asc' ? 1 : -1;
+  if (lastName && lastName !== 'all') sortOptions.last_name = lastName === 'asc' ? 1 : -1;
+  if (fee && fee !== 'all') sortOptions.fee = fee === 'asc' ? 1 : -1;
+  if (rating && rating !== 'all') sortOptions.rating = rating === 'asc' ? 1 : -1;
 
   // ---------------- Query ----------------
   try {
     const agents = await Agent.find(filters).sort(sortOptions);
 
-    // UPDATED: standardized success response
+    // Return the standardized success response
     ResponseUtil.respondOk(res, agents, 'Agents filtered by region');
   } catch (err) {
-    // UPDATED: standardized error response
     ResponseUtil.respondError(res, err.message, 'Error fetching agents', 500);
   }
 });
+
 
 // END OF UPDATED "AGENTSBYREGION" TO INCLUDE SORTING AND COLORS
 

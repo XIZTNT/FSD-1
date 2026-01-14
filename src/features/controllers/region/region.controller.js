@@ -44,7 +44,7 @@ const getRegion = asyncWrapper(async (req, res) => {
 
 // Get top agents from North, South, and East regions
 const getAllStars = asyncWrapper(async (req, res) => {
-  const regions = ['north', 'south', 'east']; // Loop through to avoid repetitive code
+  const regions = ['north', 'south','west', 'east']; // Loop through to avoid repetitive code
   const topAgents = {};
 
   // Loop through each region and fetch top agent
