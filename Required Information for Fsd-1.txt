@@ -1,6 +1,4 @@
 Required Information for Fsd-1
 
-YOUTUBE:
-GITHUB:
-
-Research 1:
+YOUTUBE: https://youtu.be/vzML3nsOsXk
+GITHUB: https://github.com/XIZTNT/FSD-1
